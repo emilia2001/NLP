@@ -51,41 +51,38 @@ stories:
   - intent: deny
   - action: utter_goodbye
 
-#Add/Get person job
-- story: add person job
+#Add/Get process step
+- story: add process step
   steps:
-  - intent: add_person_job
-  - action: action_add_person_job
-  - action: utter_confirm_job
+  - intent: add_process_step
+  - action: action_add_process_step
+  - action: utter_confirm_step
 
-- story: get person job
+- story: get process step
   steps:
-  - intent: get_person_job
-  - action: action_get_person_job
-  - action: utter_person_job
+  - intent: get_process_step
+  - action: action_get_process_step
 
-#Add/Get task job
-- story: add task job
+#Add/Get material step
+- story: add material step
   steps:
-  - intent: add_task_job
-  - action: action_add_task_job
-  - action: utter_confirm_task
+  - intent: add_material_step
+  - action: action_add_material_step
+  - action: utter_confirm_material
 
-- story: get task job
+- story: get material step
   steps:
-  - intent: get_task_job
-  - action: action_get_task_job
-  - action: utter_task_job
+  - intent: get_material_step
+  - action: action_get_material_step
 
-#Add/Get tool task
-- story: add tool task
+#Add/Get tool material
+- story: add tool material
   steps:
-  - intent: add_tool_task
-  - action: action_add_tool_task
+  - intent: add_tool_material
+  - action: action_add_tool_material
   - action: utter_confirm_tool
 
-- story: get task job
+- story: get material step
   steps:
-  - intent: get_tool_task
-  - action: action_get_tool_task
-  - action: utter_tool_task
+  - intent: get_tool_material
+  - action: action_get_tool_material

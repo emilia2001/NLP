@@ -9,12 +9,12 @@ intents:
   - mood_unhappy
   - bot_challenge
   - mood_check
-  - add_person_job
-  - get_person_job
-  - add_task_job
-  - get_task_job
-  - add_tool_task
-  - get_tool_task
+  - add_process_step
+  - get_process_step
+  - add_material_step
+  - get_material_step
+  - add_tool_material
+  - get_tool_material
 
 responses:
   utter_greet:
@@ -43,61 +43,76 @@ responses:
   utter_mood_check:
   - text: "I'm doing good? How are you doing today?"
 
-#Confirm/Get persons and job
-  utter_confirm_job:
-    - text: "Added {person} as {job}."
-  utter_person_job:
-    - text: "{person} is a {job}."
+#Confirm/Get processes and steps
+  utter_confirm_step:
+    - text: "Added {step} for {process}."
+  utter_process_step:
+    - text: "Steps for {process}: {steps}"
 
-#Confirm/Get task and job
-  utter_confirm_task:
-    - text: "Added {task} for the {job}."
-  utter_task_job:
-    - text: "{job} has this {task}."
+#Confirm/Get material and steps
+  utter_confirm_material:
+    - text: "Added {material} for the {step} step."
+  utter_material_step:
+    - text: "Materials used for {step}: {materials}"
 
-#Confirm/Get task and job
+#Confirm/Get material and step
   utter_confirm_tool:
-    - text: "Added {tool} for the {task}."
-  utter_tool_task:
-    - text: "{task} has this {tool}."
+    - text: "Added {tool} required by the {material}."
+  utter_tool_material:
+    - text: "Tools required for {material}: {tools}"
 
 #Entities
 entities:
-  - person
-  - job
-  - task
+  - process
+  - step
+  - material
   - tool
 
 slots:
-  person:
+  process:
     type: text
     mappings:
       - type: from_entity
-        entity: person
-  job:
+        entity: process
+  step:
     type: text
     mappings:
       - type: from_entity
-        entity: job
-  task:
+        entity: step
+  material:
     type: text
     mappings:
       - type: from_entity
-        entity: task
+        entity: material
   tool:
     type: text
     mappings:
       - type: from_entity
         entity: tool
+  steps:
+    type: text
+    mappings:
+      - type: from_text
+
+  materials:
+    type: text
+    mappings:
+      - type: from_text
+
+  tools:
+    type: text
+    mappings:
+      - type: from_text
+
 
 #Actions (actions.py)
 actions:
-  - action_add_person_job
-  - action_get_person_job
-  - action_add_task_job
-  - action_get_task_job
-  - action_add_tool_task
-  - action_get_tool_task
+  - action_add_process_step
+  - action_get_process_step
+  - action_add_material_step
+  - action_get_material_step
+  - action_add_tool_material
+  - action_get_tool_material
 
 session_config:
   session_expiration_time: 60

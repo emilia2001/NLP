@@ -1,35 +1,29 @@
-# This files contains your custom actions which can be used to run
-# custom Python code.
-#
-# See this guide on how to implement these action:
-# https://rasa.com/docs/rasa/custom-actions
-
 from typing import Any, Text, Dict, List
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from rdflib import Graph, URIRef, Namespace
 import requests
 
-class ActionAddPersonJob(Action):
+class ActionAddprocessstep(Action):
 
     def name(self) -> Text:
-        return "action_add_person_job"
+        return "action_add_process_step"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        person = tracker.get_slot('person')
-        job = tracker.get_slot('job')
+        process = tracker.get_slot('process')
+        step = tracker.get_slot('step')
 
         # Define namespaces and RDF graph
         ex = Namespace("http://emi.ro/")
         g = Graph()
 
         # Create RDF triples
-        person_uri = URIRef(ex[person])
-        job_uri = URIRef(ex[job])
-        g.add((person_uri, ex.hasJob, job_uri))
+        process_uri = URIRef(ex[process])
+        step_uri = URIRef(ex[step])
+        g.add((process_uri, ex.hasStep, step_uri))
 
         # Serialize the graph in RDF format
         rdf_data = g.serialize(format='turtle')
@@ -38,50 +32,55 @@ class ActionAddPersonJob(Action):
 
         return []
 
-class ActionGetPersonJob(Action):
+class ActionGetprocessstep(Action):
 
     def name(self) -> Text:
-        return "action_get_person_job"
+        return "action_get_process_step"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        person = tracker.get_slot('person')
+        process = tracker.get_slot('process')
 
         adress = "http://localhost:7200/repositories/python"
 
         interogare = """
         PREFIX ex: <http://emi.ro/>
-        SELECT ?job WHERE {
-            ex:%s ex:hasJob ?job .
+        SELECT ?step WHERE {
+            ex:%s ex:hasStep ?step .
         }
-        """ % person
+        """ % process
 
         parametri = {"query":interogare}
         cerere=requests.get(adress,params=parametri)
+
+        steps = cerere.content.decode().replace("http://emi.ro/", "", -1).splitlines()[1:]  # Skip the header line
+        steps_text = ', '.join(steps)
+        dispatcher.utter_message(text=f"Steps from process {process}: {steps_text}")
+
         return []
     
-class ActionAddTaskJob(Action):
+class ActionAddmaterialstep(Action):
 
     def name(self) -> Text:
-        return "action_add_task_job"
+        return "action_add_material_step"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        task = tracker.get_slot('task')
-        job = tracker.get_slot('job')
+        material = tracker.get_slot('material')
+        step = tracker.get_slot('step')
 
         # Define namespaces and RDF graph
         ex = Namespace("http://emi.ro/")
         g = Graph()
 
         # Create RDF triples
-        task_uri = URIRef(ex[task])
-        job_uri = URIRef(ex[job])
-        g.add((task_uri, ex.isTaskFor, job_uri))
+        material_uri = URIRef(ex[material])
+        step_uri = URIRef(ex[step])
+        g.add((material_uri, ex.isMaterialFor, step_uri))
 
         # Serialize the graph in RDF format
         rdf_data = g.serialize(format='turtle')
@@ -90,41 +89,46 @@ class ActionAddTaskJob(Action):
 
         return []
     
-class ActionGetTaskJob(Action):
+class ActionGetmaterialstep(Action):
 
     def name(self) -> Text:
-        return "action_get_task_job"
+        return "action_get_material_step"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        job = tracker.get_slot('job')
+        step = tracker.get_slot('step')
 
         adress = "http://localhost:7200/repositories/python"
 
         interogare = """
         PREFIX ex: <http://emi.ro/>
-        SELECT ?task WHERE {
-            ?task ex:isTaskFor ex:%s .
+        SELECT ?material WHERE {
+            ?material ex:isMaterialFor ex:%s .
         }
-        """ % job
+        """ % step
 
         parametri = {"query":interogare}
         cerere=requests.get(adress,params=parametri)
+
+        materials = cerere.content.decode().replace("http://emi.ro/", "", -1).splitlines()[1:]  # Skip the header line
+        materials_text = ', '.join(materials)
+        dispatcher.utter_message(text=f"Materials used in {step}: {materials_text}")
+
         return []
     
-class ActionAddToolTask(Action):
+class ActionAddToolmaterial(Action):
 
     def name(self) -> Text:
-        return "action_add_tool_task"
+        return "action_add_tool_material"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
         tool = tracker.get_slot('tool')
-        task = tracker.get_slot('task')
+        material = tracker.get_slot('material')
 
         # Define namespaces and RDF graph
         ex = Namespace("http://emi.ro/")
@@ -132,8 +136,8 @@ class ActionAddToolTask(Action):
 
         # Create RDF triples
         tool_uri = URIRef(ex[tool])
-        task_uri = URIRef(ex[task])
-        g.add((tool_uri, ex.hasTask, task_uri))
+        material_uri = URIRef(ex[material])
+        g.add((tool_uri, ex.isRequiredBy, material_uri))
 
         # Serialize the graph in RDF format
         rdf_data = g.serialize(format='turtle')
@@ -142,29 +146,35 @@ class ActionAddToolTask(Action):
 
         return []
     
-class ActionGetToolTask(Action):
+class ActionGetToolmaterial(Action):
 
     def name(self) -> Text:
-        return "action_get_tool_task"
+        return "action_get_tool_material"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
 
-        task = tracker.get_slot('task')
+        material = tracker.get_slot('material')
 
         adress = "http://localhost:7200/repositories/python"
 
         interogare = """
         PREFIX ex: <http://emi.ro/>
         SELECT ?tool WHERE {
-            ?tool ex:hasTask ex:%s .
+            ?tool ex:isRequiredBy ex:%s .
         }
-        """ % task
+        """ % material
 
         parametri = {"query":interogare}
         cerere=requests.get(adress,params=parametri)
+
+        tools = cerere.content.decode().replace("http://emi.ro/", "", -1).splitlines()[1:]  # Skip the header line
+        tools_text = ', '.join(tools)
+        dispatcher.utter_message(text=f"Tools required for {material}: {tools_text}")
+
         return []
+
     
 def send_to_graphdb(rdf_data):
     headers = {
