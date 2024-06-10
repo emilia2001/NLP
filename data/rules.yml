@@ -1,0 +1,52 @@
+version: "3.1"
+
+rules:
+
+- rule: Say goodbye anytime the user says goodbye
+  steps:
+  - intent: goodbye
+  - action: utter_goodbye
+
+- rule: Say 'I am a bot' anytime the user challenges
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot
+
+#
+- rule: Add a person to a job
+  steps:
+  - intent: add_person_job
+  - action: action_add_person_job
+  - action: utter_confirm_job
+
+- rule: Get a person to a job
+  steps:
+  - intent: get_person_job
+  - action: action_get_person_job
+  - action: utter_person_job
+
+#
+- rule: Add a task to a job
+  steps:
+  - intent: add_task_job
+  - action: action_add_task_job
+  - action: utter_confirm_task
+
+- rule: Get a task to a job
+  steps:
+  - intent: get_task_job
+  - action: action_get_task_job
+  - action: utter_task_job
+
+#
+- rule: Add a tool to a task
+  steps:
+  - intent: add_tool_task
+  - action: action_add_tool_task
+  - action: utter_confirm_tool
+
+- rule: Get a tool to a task
+  steps:
+  - intent: get_tool_task
+  - action: action_get_tool_task
+  - action: utter_tool_task

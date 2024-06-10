@@ -1,0 +1,91 @@
+version: "3.1"
+
+stories:
+
+- story: happy path
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_great
+  - action: utter_happy
+
+- story: sad path 1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - intent: affirm
+  - action: utter_happy
+
+- story: sad path 2
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+- story: talk path 1
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_check
+  - action: utter_mood_check
+  - intent: mood_great
+  - action: utter_happy
+  - action: utter_goodbye
+
+- story: talk path 2
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: mood_check
+  - action: utter_mood_check
+  - intent: mood_unhappy
+  - action: utter_cheer_up
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+#Add/Get person job
+- story: add person job
+  steps:
+  - intent: add_person_job
+  - action: action_add_person_job
+  - action: utter_confirm_job
+
+- story: get person job
+  steps:
+  - intent: get_person_job
+  - action: action_get_person_job
+  - action: utter_person_job
+
+#Add/Get task job
+- story: add task job
+  steps:
+  - intent: add_task_job
+  - action: action_add_task_job
+  - action: utter_confirm_task
+
+- story: get task job
+  steps:
+  - intent: get_task_job
+  - action: action_get_task_job
+  - action: utter_task_job
+
+#Add/Get tool task
+- story: add tool task
+  steps:
+  - intent: add_tool_task
+  - action: action_add_tool_task
+  - action: utter_confirm_tool
+
+- story: get task job
+  steps:
+  - intent: get_tool_task
+  - action: action_get_tool_task
+  - action: utter_tool_task

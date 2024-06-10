@@ -1,0 +1,104 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - mood_great
+  - mood_unhappy
+  - bot_challenge
+  - mood_check
+  - add_person_job
+  - get_person_job
+  - add_task_job
+  - get_task_job
+  - add_tool_task
+  - get_tool_task
+
+responses:
+  utter_greet:
+  - text: "Hi!"
+  - text: "Hello!"
+  - text: "Hey! How are you?"
+
+  utter_cheer_up:
+  - text: "Here is something to cheer you up:"
+    image: "https://i.imgur.com/nGF1K8f.jpg"
+
+  utter_did_that_help:
+  - text: "Did that help you?"
+
+  utter_happy:
+  - text: "Great, carry on!"
+
+  utter_goodbye:
+  - text: "Bye"
+  - text: "Goodbye"
+  - text: "Have a nice day"
+
+  utter_iamabot:
+  - text: "I am a bot, powered by Rasa."
+
+  utter_mood_check:
+  - text: "I'm doing good? How are you doing today?"
+
+#Confirm/Get persons and job
+  utter_confirm_job:
+    - text: "Added {person} as {job}."
+  utter_person_job:
+    - text: "{person} is a {job}."
+
+#Confirm/Get task and job
+  utter_confirm_task:
+    - text: "Added {task} for the {job}."
+  utter_task_job:
+    - text: "{job} has this {task}."
+
+#Confirm/Get task and job
+  utter_confirm_tool:
+    - text: "Added {tool} for the {task}."
+  utter_tool_task:
+    - text: "{task} has this {tool}."
+
+#Entities
+entities:
+  - person
+  - job
+  - task
+  - tool
+
+slots:
+  person:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: person
+  job:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: job
+  task:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: task
+  tool:
+    type: text
+    mappings:
+      - type: from_entity
+        entity: tool
+
+#Actions (actions.py)
+actions:
+  - action_add_person_job
+  - action_get_person_job
+  - action_add_task_job
+  - action_get_task_job
+  - action_add_tool_task
+  - action_get_tool_task
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
